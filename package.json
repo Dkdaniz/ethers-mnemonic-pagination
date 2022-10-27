@@ -6,7 +6,7 @@
   "author": "<daniel@descentralizado.com.br>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts"
+    "dev": "source .env && nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts"
   },
   "devDependencies": {
     "@types/node": "^18.11.7",

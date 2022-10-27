@@ -1,0 +1,11 @@
+{
+  "name": "mnemonic-pagination",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Dkdaniz/mnemonic-pagination.git",
+  "author": "<daniel@descentralizado.com.br>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
+}

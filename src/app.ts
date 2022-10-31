@@ -1,41 +1,41 @@
 import {ethers} from 'ethers'
 
-interface WalletSeed {
-    [key: number]: Array<string>
+interface wallet {
+    publicKey: string,
+    privateKey: string,
 }
 
-let wallets: Array<string>;
+interface WalletSeed {
+    [key: number]: Array<wallet>
+}
 
-const processSeed = (seed: string, start: number, end: number): Array<string> => {
+let wallets: Array<wallet>;
+
+const processSeed = ( path: string, seed: string, start: number, end: number): Array<wallet> => {
     wallets = [];
 
     for (let i = start; i < end; i++) {
-        wallets.push(ethers.Wallet.fromMnemonic(seed, `m/44'/60'/0'/0/${i}`).address)
+        wallets.push({publicKey: ethers.Wallet.fromMnemonic(seed, `${path}/${i}`).address, privateKey: ethers.Wallet.fromMnemonic(seed, `${path}/${i}`).privateKey})
     }
 
     return wallets;
 }
 
-const paginationSeed = async (seed: string, numPage: number, walletPerPage: number) => {
+const paginationSeed = async (path: string, seed: string, numPage: number, walletPerPage: number) => {
     const promiseWallets : WalletSeed = {};
-    
-    console.time('load')
 
     for (let page = 0; page < numPage; page++) {
         const start = page * walletPerPage;
         const end = (page * walletPerPage) + walletPerPage;
-
-        console.log(start, end)
         
-        promiseWallets[page] = processSeed(seed, start, end);
+        promiseWallets[page] = processSeed(path, seed, start, end);
     }
     
-    await Promise.all([promiseWallets]).then(values => {
-        console.log(values[0])
-
-        console.timeEnd('load')
+    const wallets = await Promise.all([promiseWallets]).then(values => {
+        return values[0]
     })
 
+    console.log(wallets)
 }
 
-paginationSeed(process.env.SEED || "",10, 100)
+paginationSeed(`m/44'/60'/0'/0`, process.env.SEED || "",1, 2)
